@@ -4,6 +4,9 @@ using System.Collections;
 public class CubeScript : MonoBehaviour
 {
     // Use this for initialization
+    
+    public Shader shader;
+    public Texture texture;
     void Start()
     {
         // Add a MeshFilter component to this entity. This essentially comprises of a
@@ -12,12 +15,28 @@ public class CubeScript : MonoBehaviour
         MeshFilter cubeMesh = this.gameObject.AddComponent<MeshFilter>();
         cubeMesh.mesh = this.CreateCubeMesh();
 
+
         // Add a MeshRenderer component. This component actually renders the mesh that
         // is defined by the MeshFilter component. You will need to modify this 
         // component for task 1 (and again for task 5), in order to set the material
         // to be used in rendering the cube.
         MeshRenderer renderer = this.gameObject.AddComponent<MeshRenderer>();
-        //renderer.material ...
+
+    }
+    void OnEnable()
+    {
+        MeshRenderer renderer = this.gameObject.GetComponent<MeshRenderer>();
+        renderer.material.shader = this.shader;
+        renderer.material.mainTexture = this.texture;
+    }
+
+    void Update()
+    {
+        MeshRenderer renderer = this.gameObject.GetComponent<MeshRenderer>();
+
+        // Set blend uniform parameter in an oscillating fashion to demonstrate 
+        // blending shader (challenge question)
+        renderer.material.SetFloat("_BlendFct", (Mathf.Sin(Time.time) + 1.0f) / 2.0f);
     }
 
     // Method to create a cube mesh with coloured vertices
